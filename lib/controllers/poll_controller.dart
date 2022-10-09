@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:go_poll/models/poll.dart';
 import 'package:go_poll/screens/poll_page.dart';
+import 'package:go_poll/screens/results_page.dart';
 import 'package:go_poll/services/api.dart';
 
 class PollController extends GetxController {
   final polls = <Poll>[].obs;
 
   final options = <TextEditingController>[].obs;
+  final isBlank=false.obs;
 
   final titleController = TextEditingController();
   final descriptionController = TextEditingController();
@@ -17,9 +19,7 @@ class PollController extends GetxController {
 
   late final isSelected = (-1).obs;
 
-  final Map<String,double> dataMap={};
-
-
+  final Map<String, double> dataMap = {};
 
   @override
   void onInit() {
@@ -54,7 +54,7 @@ class PollController extends GetxController {
     await fetch();
   }
 
-  void addPoll() async {
+  void addPoll() async { 
     final createPoll = Poll(
       id: -1,
       title: titleController.text,
@@ -63,20 +63,34 @@ class PollController extends GetxController {
       options: options.map((e) => e.text).toList(),
       votes: [],
     );
-
-    if (titleController.text != "" && descriptionController.text != "") {
+    for(final option in options){
+      if(option.text==""){
+        isBlank.value = true;
+      }else{
+        isBlank.value= false;
+      }
+    }
+    if (titleController.text != "" &&
+        descriptionController.text != "" &&
+        options.length >= 2 && isBlank.value==false) {
       final poll = await Api.createPoll(createPoll);
       if (poll == null) {
+        Get.snackbar("Error", "Poll couldn't be created!");
         return;
-      } else {
-        polls.insert(0, poll);
       }
-      Get.to(PollPage(poll: poll));
+      polls.insert(0, poll);
+      Get.off(PollPage(poll: poll));
       titleController.clear();
       descriptionController.clear();
+      for (final cont in options) {
+        cont.dispose();
+      }
       options.clear();
+      options.add(TextEditingController());
+      options.add(TextEditingController());
     } else {
-      Get.snackbar("Blank Space", "+");
+      Get.snackbar("Blank Space",
+          "You have to add at least two options and fill all the blank spaces!");
     }
     refresh();
   }
@@ -90,10 +104,10 @@ class PollController extends GetxController {
     if (result == null) {
       Get.snackbar("Error", "Couldn't get votes.");
     } else {
-      polls[id].votes=result;
-      isSelected.value= -1;
+      polls[id].votes = result;
+      isSelected.value = -1;
+      polls[id].voted = true;
+      Get.off(ResultsPage(poll: polls[id]));
     }
-    isLoading.value = false;
-    
   }
 }

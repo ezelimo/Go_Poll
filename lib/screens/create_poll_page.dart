@@ -44,6 +44,8 @@ class CreatePollPage extends StatelessWidget {
                   ),
                 ),
                 TextField(
+                  textInputAction: TextInputAction.next,
+                  autofocus:true,
                   style: const TextStyle(color: lightWhite, fontFamily: "Puff"),
                   decoration: InputDecoration(
                     filled: true,
@@ -63,6 +65,8 @@ class CreatePollPage extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 20.0),
                   child: TextField(
+                    textInputAction: TextInputAction.next,
+                    autofocus: true,
                     style:
                         const TextStyle(color: lightWhite, fontFamily: "Puff"),
                     maxLines: null,

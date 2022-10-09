@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:go_poll/controllers/poll_controller.dart';
 import 'package:go_poll/models/poll.dart';
-import 'package:go_poll/screens/all_polls.dart';
 import 'package:go_poll/styles/buttons.dart';
 import 'package:go_poll/styles/colors.dart';
 import 'package:go_poll/widgets/choice_widget.dart';
@@ -55,8 +54,6 @@ class PollWidget extends GetView<PollController> {
                   const SizedBox(height: 30),
                   Obx(
                     () {
-                      // ignore: unused_local_variable
-                      final isVoted = controller.isVoted.value;
                       final selected = controller.isSelected.value != -1;
                       return ElevatedButton.icon(
                         onPressed: poll.voted
@@ -65,8 +62,6 @@ class PollWidget extends GetView<PollController> {
                                 if (selected) {
                                   controller.addVote(
                                       poll.id, controller.isSelected.value);
-                                  poll.voted = true;
-                                  Get.to(const AllPolls());
                                 }
                               },
                         style: indigoButton,

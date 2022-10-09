@@ -16,6 +16,9 @@ class OptionWidget extends StatelessWidget {
         children: [
           Expanded(
             child: TextField(
+              textInputAction: TextInputAction.done,
+              autofocus: true,
+              focusNode: FocusNode(),
               controller: controller,
               style: const TextStyle(color: lightWhite,fontFamily: "Puff"),
               decoration: InputDecoration(
